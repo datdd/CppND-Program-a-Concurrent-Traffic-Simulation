@@ -31,6 +31,19 @@ void Graphics::loadBackgroundImg()
     _images.push_back(background.clone()); // third element will be the result image for display
 }
 
+void Graphics::drawCircleWithText(cv::Mat& image, cv::Point2d center, int radius, cv::Scalar color, const std::string& text) {
+  // Draw the circle
+  cv::circle(image, center, radius, color, -1);  // -1 for filled circle
+
+  // Calculate text size and position
+//   cv::putText(image, text, center, cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(255, 255, 255), 2);
+
+  // Adjust text position based on circle size and text length
+  int textWidth = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 2, 2, nullptr).width;
+  int textOffset = std::min(radius - textWidth / 2, 5);  // Adjust for smaller circles
+  cv::putText(image, text, center + cv::Point2d(textOffset, 0), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
+}
+
 void Graphics::drawTrafficObjects()
 {
     // reset images
@@ -59,7 +72,7 @@ void Graphics::drawTrafficObjects()
             int g = rng.uniform(0, 255);
             int r = sqrt(255*255 - g*g - b*b); // ensure that length of color vector is always 255
             cv::Scalar vehicleColor = cv::Scalar(b,g,r);
-            cv::circle(_images.at(1), cv::Point2d(posx, posy), 50, vehicleColor, -1);
+            drawCircleWithText(_images.at(1), cv::Point2d(posx, posy), 50, vehicleColor, std::to_string(it->getID()));
         }
     }
 

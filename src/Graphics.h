@@ -22,6 +22,7 @@ private:
     // typical behaviour methods
     void loadBackgroundImg();
     void drawTrafficObjects();
+    void drawCircleWithText(cv::Mat& image, cv::Point2d center, int radius, cv::Scalar color, const std::string& text);
 
     // member variables
     std::vector<std::shared_ptr<TrafficObject>> _trafficObjects;

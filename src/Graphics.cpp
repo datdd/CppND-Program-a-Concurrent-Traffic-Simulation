@@ -35,13 +35,10 @@ void Graphics::drawCircleWithText(cv::Mat& image, cv::Point2d center, int radius
   // Draw the circle
   cv::circle(image, center, radius, color, -1);  // -1 for filled circle
 
-  // Calculate text size and position
-//   cv::putText(image, text, center, cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(255, 255, 255), 2);
-
   // Adjust text position based on circle size and text length
   int textWidth = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 2, 2, nullptr).width;
-  int textOffset = std::min(radius - textWidth / 2, 5);  // Adjust for smaller circles
-  cv::putText(image, text, center + cv::Point2d(textOffset, 0), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
+  int textHeight = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 2, 2, nullptr).height;
+  cv::putText(image, text, center + cv::Point2d(-textWidth/2, textHeight/2), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
 }
 
 void Graphics::drawTrafficObjects()
@@ -63,7 +60,8 @@ void Graphics::drawTrafficObjects()
 
             // set color according to traffic light and draw the intersection as a circle
             cv::Scalar trafficLightColor = intersection->trafficLightIsGreen() == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
-            cv::circle(_images.at(1), cv::Point2d(posx, posy), 25, trafficLightColor, -1);
+            // cv::circle(_images.at(1), cv::Point2d(posx, posy), 25, trafficLightColor, -1);
+            drawCircleWithText(_images.at(1), cv::Point2d(posx, posy), 25, trafficLightColor, std::to_string(it->getID()));
         }
         else if (it->getType() == ObjectType::objectVehicle)
         {
